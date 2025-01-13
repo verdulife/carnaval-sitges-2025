@@ -1,11 +1,56 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "@/layouts/Layout.astro";
 ---
 
 <Layout>
-	<Welcome />
+  <main class="flex flex-1 flex-col items-center justify-end p-6">
+    <video
+      playsinline
+      autoplay
+      muted
+      class="fixed inset-0 size-full object-cover"></video>
+    <div
+      class="filter"
+      style="--filter: red;"
+      class="fixed inset-0 size-full bg-[var(--filter)] mix-blend-multiply"
+    >
+    </div>
+    <button
+      class="z-10 min-w-64 rounded-full border border-blue-600 bg-blue-700 px-4 py-2 transition-transform hover:scale-105"
+    >
+      Veure versió nit
+    </button>
+  </main>
 </Layout>
+
+<script>
+  function init_video() {
+    const video = document.querySelector("video") as HTMLVideoElement;
+    const filter = document.querySelector(".filter") as HTMLElement;
+    const button = document.querySelector("button") as HTMLButtonElement;
+    let is_filter: "red" | "blue" = "red";
+
+    if (!video || !filter || !button) return;
+
+    navigator.mediaDevices
+      .getUserMedia({
+        audio: false,
+        video: { facingMode: "environment" },
+      })
+      .then((stream) => {
+        video.srcObject = stream;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    button.addEventListener("click", () => {
+      is_filter = is_filter === "red" ? "blue" : "red";
+      filter.style.setProperty("--filter", is_filter);
+      button.innerText =
+        is_filter === "red" ? "Veure versió nit" : "Veure versió dia";
+    });
+  }
+
+	init_video();
+</script>

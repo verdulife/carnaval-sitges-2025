@@ -1,22 +1,72 @@
+---
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+
+const { title, description, image, name, url } = Astro.props;
+---
+
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+<html lang="ca">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content={name} />
+    <link rel="apple-touch-icon" type="image/png" href="/mobile.png" />
+    <title>{title}</title>
+    <meta name="author" content="verdu | verdu@live.com" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content={image} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <meta name="twitter:image:alt" content={title} />
+
+    <script type="application/ld+json" is:inline>
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "url": {url},
+        "alternateName": {name}
+      }
+    </script>
+  </head>
+
+  <body class=" text-neutral-50">
+    <div class="flex min-h-svh flex-col overflow-hidden">
+      <Header />
+      <slot />
+      <Footer />
+    </div>
+  </body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+<style is:global>
+  :root {
+    @apply scroll-smooth;
+  }
+
+  p {
+    @apply text-pretty;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-balance;
+  }
 </style>
