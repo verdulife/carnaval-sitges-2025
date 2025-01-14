@@ -1,4 +1,6 @@
 ---
+import '@khmyznikov/pwa-install';
+
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 
@@ -49,6 +51,27 @@ const { title, description, image, name, url } = Astro.props;
       <slot />
       <Footer />
     </div>
+    
+    <pwa-install
+      manual-apple="true"
+      manual-chrome="true"
+      disable-chrome="true"
+      disable-close="true"
+      use-local-storage="true"
+
+      install-description="Custom call to install text"
+      disable-install-description="true"
+      disable-screenshots="true"
+      disable-screenshots-apple="true"
+      disable-screenshots-chrome="true"
+
+      disable-android-fallback="true"
+
+      manifest-url="/manifest.json"
+      name={name}
+      description={description}         
+      icon={image}>
+    </pwa-install>
   </body>
 </html>
 
