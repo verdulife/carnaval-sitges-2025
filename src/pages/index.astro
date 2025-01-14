@@ -17,6 +17,7 @@ import Layout from "@/layouts/Layout.astro";
     >
     </div>
     <button
+      id="filter-button"
       class="z-10 min-w-64 rounded-full border border-neutral-800 bg-neutral-900 px-6 py-3 transition-transform active:scale-105"
     >
       Veure versió nit
@@ -28,10 +29,12 @@ import Layout from "@/layouts/Layout.astro";
   function init_video() {
     const video = document.querySelector("video") as HTMLVideoElement;
     const filter = document.querySelector(".filter") as HTMLElement;
-    const button = document.querySelector("button") as HTMLButtonElement;
+    const filter_button = document.querySelector(
+      "#filter-button"
+    ) as HTMLButtonElement;
     let is_filter = "red";
 
-    if (!video || !filter || !button) return;
+    if (!video || !filter || !filter_button) return;
 
     navigator.mediaDevices
       .getUserMedia({
@@ -45,10 +48,10 @@ import Layout from "@/layouts/Layout.astro";
         console.log(err);
       });
 
-    button.addEventListener("click", () => {
+    filter_button.addEventListener("click", () => {
       is_filter = is_filter === "red" ? "blue" : "red";
       filter.style.setProperty("--filter", `var(--filter-${is_filter})`);
-      button.innerText =
+      filter_button.innerText =
         is_filter === "red" ? "Veure versió nit" : "Veure versió dia";
     });
   }

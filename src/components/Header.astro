@@ -3,12 +3,31 @@ import Info from "@/assets/Info.astro";
 ---
 
 <header class="fixed top-0 z-10 flex w-full items-center justify-end p-1">
-  <a
-    href="https://github.com/verdulife"
-    title="Fet amb ❤️ per Verdu"
-    target="_blank"
+  <button
+    id="credits-button"
     class="p-2 opacity-20 transition-opacity hover:opacity-100"
   >
     <Info />
-  </a>
+  </button>
 </header>
+
+<script>
+  function init_credits() {
+    const credits_button = document.querySelector(
+      "#credits-button"
+    ) as HTMLButtonElement;
+    const credits = document.querySelector("#credits") as HTMLDialogElement;
+    if (!credits_button || !credits) return;
+
+    credits_button.addEventListener("click", () => {
+      console.log("Credits");
+      credits.open = true;
+    });
+
+    credits.addEventListener("click", () => {
+      credits.close();
+    });
+  }
+
+  init_credits();
+</script>

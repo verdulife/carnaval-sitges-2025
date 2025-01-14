@@ -1,0 +1,64 @@
+---
+import Sitges from "@/assets/Sitges.astro";
+---
+
+<footer>
+  <dialog
+    id="credits"
+    class="inset-0 z-50 size-full w-full items-end bg-transparent open:flex"
+  >
+    <div
+      class="flex w-full flex-col items-center justify-center rounded-tl-3xl rounded-tr-3xl border-t border-neutral-800 bg-neutral-900 px-6 py-20 text-neutral-100"
+    >
+      <p class="text-lg">
+        Fet amb ❤️ per <a
+          href="https://github.com/verdulife"
+          target="_blank"
+          class="text-blue-400 underline">Verdu</a
+        >
+      </p>
+      <p class="mt-1 text-lg">
+        Autor del Cartell <a
+          href="https://www.victorbregante.com"
+          target="_blank"
+          class="text-blue-400 underline">Victor Bregante</a
+        >
+      </p>
+
+      <a href="https://www.sitges.cat" target="_blank">
+        <Sitges class="mt-12 h-16" />
+      </a>
+    </div>
+  </dialog>
+</footer>
+
+<style>
+  dialog {
+    transition:
+      display 1s allow-discrete,
+      overlay 1s allow-discrete;
+
+    animation: close 1s forwards;
+    &[open] {
+      animation: open 1s forwards;
+    }
+  }
+
+  @keyframes open {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes close {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(100%);
+    }
+  }
+</style>
