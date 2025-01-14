@@ -8,11 +8,12 @@ import Layout from "@/layouts/Layout.astro";
       playsinline
       autoplay
       muted
-      class="fixed inset-0 size-full object-cover"></video>
+      class="fixed inset-0 size-full object-cover"
+    >
+    </video>
     <div
-      class="filter"
-      style="--filter: red;"
-      class="fixed inset-0 size-full bg-[var(--filter)] mix-blend-multiply"
+      style="--filter: var(--filter-red);"
+      class="fixed inset-0 bg-[var(--filter)] mix-blend-multiply filter"
     >
     </div>
     <button
@@ -28,7 +29,7 @@ import Layout from "@/layouts/Layout.astro";
     const video = document.querySelector("video") as HTMLVideoElement;
     const filter = document.querySelector(".filter") as HTMLElement;
     const button = document.querySelector("button") as HTMLButtonElement;
-    let is_filter: "red" | "blue" = "red";
+    let is_filter = "red";
 
     if (!video || !filter || !button) return;
 
@@ -46,11 +47,11 @@ import Layout from "@/layouts/Layout.astro";
 
     button.addEventListener("click", () => {
       is_filter = is_filter === "red" ? "blue" : "red";
-      filter.style.setProperty("--filter", is_filter);
+      filter.style.setProperty("--filter", `var(--filter-${is_filter})`);
       button.innerText =
         is_filter === "red" ? "Veure versió nit" : "Veure versió dia";
     });
   }
 
-	init_video();
+  init_video();
 </script>
