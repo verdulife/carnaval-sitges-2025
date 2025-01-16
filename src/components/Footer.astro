@@ -8,26 +8,29 @@ import Sitges from "@/assets/Sitges.astro";
     class="inset-0 z-50 size-full w-full items-end bg-transparent open:flex"
   >
     <div
-      class="flex w-full flex-col items-center justify-center rounded-tl-3xl rounded-tr-3xl border-t border-neutral-800 bg-neutral-900 px-6 py-20 text-neutral-100"
+      class="flex w-full flex-col items-center justify-center rounded-tl-3xl rounded-tr-3xl border-t border-neutral-800 bg-neutral-900 px-6 pb-12 pt-20 text-neutral-100"
     >
-      <p class="text-lg">
-        Fet amb ❤️ per <a
-          href="https://github.com/verdulife"
-          target="_blank"
-          class="text-blue-400 underline">Verdu</a
-        >
-      </p>
-      <p class="mt-1 text-lg">
-        Autor del Cartell <a
-          href="https://www.victorbregante.com"
-          target="_blank"
-          class="text-blue-400 underline">Victor Bregante</a
-        >
+      <p class="text text-xs uppercase text-neutral-300">Autor del Cartell</p>
+      <p class="text-2xl">
+        <a href="https://www.victorbregante.com" target="_blank">
+          Victor Bregante
+        </a>
       </p>
 
-      <a href="https://www.sitges.cat" target="_blank">
-        <Sitges class="mt-12 h-14" />
-      </a>
+      <div class="mt-10 flex gap-8">
+        <a href="https://www.sitges.cat" target="_blank">
+          <Sitges class="h-12" />
+        </a>
+        <a href="https://www.sitges.cat" target="_blank">
+          <Sitges class="h-12" />
+        </a>
+      </div>
+
+      <p class="mt-16 text-xs text-neutral-300">
+        <a href="https://github.com/verdulife" target="_blank">
+          Fet amb molt de ❤️ per Verdu
+        </a>
+      </p>
     </div>
   </dialog>
 </footer>
