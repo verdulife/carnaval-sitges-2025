@@ -1,49 +1,40 @@
 ---
+import Camera from "@/assets/Camera.astro";
 import Layout from "@/layouts/Layout.astro";
+import Book from "@/assets/Book.astro";
+import Poster from "@/assets/Poster.astro";
 ---
 
 <Layout>
-  <main class="flex flex-1 flex-col items-center justify-end p-6">
-    <video
-      playsinline
-      autoplay
-      muted
-      class="fixed inset-0 size-full rounded-3xl object-cover"
-    >
-    </video>
+  <main
+    class="flex flex-1 flex-col items-center bg-[url('/bg.svg')] bg-cover bg-no-repeat p-6 text-black"
+  >
+    <img src="/logo.svg" alt="Carnaval Sitges 2025" class="w-20 mt-12" />
 
-    <div
-      style="--filter: var(--filter-red);"
-      class="fixed inset-0 rounded-3xl bg-[var(--filter)] mix-blend-multiply filter"
-    >
-    </div>
+    <nav class="mt-12 grid grid-cols-2 gap-4">
+      <a
+        href="/camara"
+        class="flex flex-col items-center rounded-3xl border border-white/20 bg-white/10 p-10 gap-2"
+      >
+        <Camera class="w-10" />
+        <p>Camara</p>
+      </a>
 
-    <button
-      id="filter-button"
-      class="z-10 min-w-64 rounded-full border border-neutral-800 bg-neutral-900 px-6 py-3 transition-transform active:scale-105"
-    >
-      Veure versió nit
-    </button>
+      <a
+        href="/programa"
+        class="flex flex-col items-center rounded-3xl border border-white/20 bg-white/10 p-10 gap-2"
+      >
+        <Book class="w-10" />
+        <p>Programa</p>
+      </a>
+
+      <a
+        href="/imatges"
+        class="flex flex-col items-center rounded-3xl border border-white/20 bg-white/10 p-10 gap-2"
+      >
+        <Poster class="w-10" />
+        <p>Imatges</p>
+      </a>
+    </nav>
   </main>
 </Layout>
-
-<script>
-  let is_filter = "red";
-
-  const video = document.querySelector("video") as HTMLVideoElement;
-  const filter = document.querySelector(".filter") as HTMLElement;
-  const filter_button = document.querySelector(
-    "#filter-button"
-  ) as HTMLButtonElement;
-
-  navigator.mediaDevices
-    .getUserMedia({ video: { facingMode: "environment" } })
-    .then((stream) => {
-      video.srcObject = stream;
-    });
-
-  filter_button.addEventListener("click", () => {
-    is_filter = is_filter === "red" ? "blue" : "red";
-    filter.style.setProperty("--filter", `var(--filter-${is_filter})`);
-  });
-</script>

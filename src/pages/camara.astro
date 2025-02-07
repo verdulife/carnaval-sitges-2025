@@ -1,0 +1,54 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Back from "@/assets/Back.astro";
+---
+
+<Layout>
+  <a href="/" class="fixed top-4 left-4 z-50">
+    <Back class="w-6" />
+  </a>
+
+  <main class="flex flex-1 flex-col items-center justify-end p-6">
+    <video
+      playsinline
+      autoplay
+      muted
+      class="fixed inset-0 size-full rounded-3xl object-cover"
+    >
+    </video>
+
+    <div
+      style="--filter: var(--filter-red);"
+      class="fixed inset-0 rounded-3xl bg-[var(--filter)] mix-blend-multiply filter"
+    >
+    </div>
+
+    <button
+      id="filter-button"
+      class="z-10 min-w-64 rounded-full border border-neutral-800 bg-neutral-900 px-6 py-3 transition-transform active:scale-105"
+    >
+      Veure versió nit
+    </button>
+  </main>
+</Layout>
+
+<script>
+  let is_filter = "red";
+
+  const video = document.querySelector("video") as HTMLVideoElement;
+  const filter = document.querySelector(".filter") as HTMLElement;
+  const filter_button = document.querySelector(
+    "#filter-button"
+  ) as HTMLButtonElement;
+
+  navigator.mediaDevices
+    .getUserMedia({ video: { facingMode: "environment" } })
+    .then((stream) => {
+      video.srcObject = stream;
+    });
+
+  filter_button.addEventListener("click", () => {
+    is_filter = is_filter === "red" ? "blue" : "red";
+    filter.style.setProperty("--filter", `var(--filter-${is_filter})`);
+  });
+</script>
