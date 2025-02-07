@@ -1,4 +1,5 @@
 ---
+import "@/styles/global.css";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 
@@ -11,7 +12,7 @@ const { title, description, image, name, url } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, viewport-fit=cover" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/png" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
     <meta name="mobile-web-app-capable" content="yes" />
@@ -66,9 +67,6 @@ const { title, description, image, name, url } = Astro.props;
 
 <style is:global>
   :root {
-    --filter-red: oklch(62.8% 0.25768330773615683 29.2338851923426);
-    --filter-blue: oklch(62.28% 0.2038 260.05);
-
     @apply scroll-smooth;
   }
 
