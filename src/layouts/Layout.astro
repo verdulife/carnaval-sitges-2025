@@ -48,8 +48,8 @@ const { title, description, image, name, url } = Astro.props;
     </script>
   </head>
 
-  <body class="bg-black text-neutral-50 overflow-hidden">
-    <div class="flex min-h-svh flex-col overflow-hidden">
+  <body class="bg-black text-neutral-50 overflow-clip">
+    <div class="relative flex min-h-svh flex-col rounded-3xl overflow-clip">
       <Header />
       <slot />
       <Footer />
