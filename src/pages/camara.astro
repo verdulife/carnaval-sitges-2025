@@ -23,12 +23,29 @@ import Back from "@/assets/Back.astro";
     >
     </div>
 
-    <button
-      id="filter-button"
-      class="fixed bottom-8 z-10 min-w-64 rounded-full border border-neutral-800 bg-neutral-900 px-6 py-3 transition-transform active:scale-105"
+    <div
+      class="fixed bottom-8 z-10 flex rounded-full border border-neutral-800 bg-neutral-900 p-2"
     >
-      Veure versió nit
-    </button>
+      <button
+        id="filter-night"
+        class:list={[
+          "min-w-20 rounded-full bg-cover bg-no-repeat px-4 py-2 text-neutral-400 transition-transform active:scale-105",
+          true && "bg-[url('./bg.svg')] text-neutral-950",
+        ]}
+      >
+        Filtre nit
+      </button>
+
+      <button
+        id="filter-day"
+        class:list={[
+          "min-w-20 rounded-full bg-cover bg-no-repeat px-4 py-2 text-neutral-400 transition-transform active:scale-105",
+          false && "bg-[url('./bg.svg')] text-neutral-950",
+        ]}
+      >
+        Filtre dia
+      </button>
+    </div>
   </main>
 </Layout>
 
@@ -37,9 +54,10 @@ import Back from "@/assets/Back.astro";
 
   const video = document.querySelector("video") as HTMLVideoElement;
   const filter = document.querySelector(".filter") as HTMLElement;
-  const filter_button = document.querySelector(
-    "#filter-button"
+  const filter_night = document.querySelector(
+    "#filter-night"
   ) as HTMLButtonElement;
+  const filter_day = document.querySelector("#filter-day") as HTMLButtonElement;
 
   navigator.mediaDevices
     .getUserMedia({ video: { facingMode: "environment" } })
@@ -47,8 +65,21 @@ import Back from "@/assets/Back.astro";
       video.srcObject = stream;
     });
 
-  filter_button.addEventListener("click", () => {
-    is_filter = is_filter === "red" ? "blue" : "red";
-    filter.style.setProperty("--filter", `var(--filter-${is_filter})`);
+  filter_night.addEventListener("click", () => {
+    filter.style.setProperty("--filter", `var(--filter-red`);
+
+    filter_night.classList.add("bg-[url('./bg.svg')]");
+    filter_night.classList.add("text-neutral-950");
+    filter_day.classList.remove("bg-[url('./bg.svg')]");
+    filter_day.classList.remove("text-neutral-950");
+  });
+
+  filter_day.addEventListener("click", () => {
+    filter.style.setProperty("--filter", `var(--filter-blue`);
+
+    filter_night.classList.remove("bg-[url('./bg.svg')]");
+    filter_night.classList.remove("text-neutral-950");
+    filter_day.classList.add("bg-[url('./bg.svg')]");
+    filter_day.classList.add("text-neutral-950");
   });
 </script>

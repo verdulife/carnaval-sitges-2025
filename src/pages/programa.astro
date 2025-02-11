@@ -14,7 +14,11 @@ import Back from "@/assets/Back.astro";
       class="fixed top-1/2 left-1/2 h-2 w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-neutral-700"
       style="display: none;"
     >
-      <div id="progress-bar" class="h-full w-0 rounded-full bg-red-300"></div>
+      <div
+        id="progress-bar"
+        class="h-full w-0 rounded-full bg-[url('./bg.svg')]"
+      >
+      </div>
     </div>
 
     <div
@@ -30,13 +34,13 @@ import Back from "@/assets/Back.astro";
     </div>
 
     <div
-      class="p2 fixed bottom-8 z-10 flex rounded-full border border-neutral-800 bg-neutral-900 p-2"
+      class="fixed bottom-8 z-10 flex rounded-full border border-neutral-800 bg-neutral-900 p-2"
     >
       <button
         id="filter-normal"
         class:list={[
-          "min-w-20 rounded-full px-4 py-2 text-neutral-400 transition-transform active:scale-105",
-          true && "bg-red-300 text-neutral-950",
+          "min-w-20 rounded-full bg-cover bg-no-repeat px-4 py-2 text-neutral-400 transition-transform active:scale-105",
+          true && "bg-[url('./bg.svg')] text-neutral-950",
         ]}
       >
         Normal
@@ -45,8 +49,8 @@ import Back from "@/assets/Back.astro";
       <button
         id="filter-night"
         class:list={[
-          "min-w-20 rounded-full px-4 py-2 text-neutral-400 transition-transform active:scale-105",
-          false && "bg-red-300 text-neutral-950",
+          "min-w-20 rounded-full bg-cover bg-no-repeat px-4 py-2 text-neutral-400 transition-transform active:scale-105",
+          false && "bg-[url('./bg.svg')] text-neutral-950",
         ]}
       >
         Nit
@@ -55,8 +59,8 @@ import Back from "@/assets/Back.astro";
       <button
         id="filter-day"
         class:list={[
-          "min-w-20 rounded-full px-4 py-2 text-neutral-400 transition-transform active:scale-105",
-          false && "bg-red-300 text-neutral-950",
+          "min-w-20 rounded-full bg-cover bg-no-repeat px-4 py-2 text-neutral-400 transition-transform active:scale-105",
+          false && "bg-[url('./bg.svg')] text-neutral-950",
         ]}
       >
         Dia
@@ -138,33 +142,33 @@ import Back from "@/assets/Back.astro";
   filter_night.addEventListener("click", () => {
     filter.style.setProperty("--filter", `var(--filter-red`);
 
-    filter_night.classList.add("bg-red-300");
+    filter_night.classList.add("bg-[url('./bg.svg')]");
     filter_night.classList.add("text-neutral-950");
-    filter_day.classList.remove("bg-red-300");
+    filter_day.classList.remove("bg-[url('./bg.svg')]");
     filter_day.classList.remove("text-neutral-950");
-    filter_normal.classList.remove("bg-red-300");
+    filter_normal.classList.remove("bg-[url('./bg.svg')]");
     filter_normal.classList.remove("text-neutral-950");
   });
 
   filter_day.addEventListener("click", () => {
     filter.style.setProperty("--filter", `var(--filter-blue`);
 
-    filter_night.classList.remove("bg-red-300");
+    filter_night.classList.remove("bg-[url('./bg.svg')]");
     filter_night.classList.remove("text-neutral-950");
-    filter_day.classList.add("bg-red-300");
+    filter_day.classList.add("bg-[url('./bg.svg')]");
     filter_day.classList.add("text-neutral-950");
-    filter_normal.classList.remove("bg-red-300");
+    filter_normal.classList.remove("bg-[url('./bg.svg')]");
     filter_normal.classList.remove("text-neutral-950");
   });
 
   filter_normal.addEventListener("click", () => {
     filter.style.setProperty("--filter", `transparent`);
 
-    filter_night.classList.remove("bg-red-300");
+    filter_night.classList.remove("bg-[url('./bg.svg')]");
     filter_night.classList.remove("text-neutral-950");
-    filter_day.classList.remove("bg-red-300");
+    filter_day.classList.remove("bg-[url('./bg.svg')]");
     filter_day.classList.remove("text-neutral-950");
-    filter_normal.classList.add("bg-red-300");
+    filter_normal.classList.add("bg-[url('./bg.svg')]");
     filter_normal.classList.add("text-neutral-950");
   });
 </script>
