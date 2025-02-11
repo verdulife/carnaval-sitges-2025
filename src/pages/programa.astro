@@ -4,11 +4,49 @@ import Back from "@/assets/Back.astro";
 ---
 
 <Layout>
-  <main class="flex flex-1 flex-col items-center justify-center p-6">
+  <main class="flex flex-1 flex-col items-center justify-center">
     <a href="/" class="fixed top-4 left-4 z-50">
       <Back class="w-6" />
     </a>
 
-    En construcció
+    <div
+      id="pdf-container"
+      class="flex h-svh w-full flex-col gap-2 overflow-x-clip overflow-y-auto"
+    >
+    </div>
   </main>
 </Layout>
+
+<script>
+  import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
+
+  GlobalWorkerOptions.workerSrc = "pdf.worker.min.mjs";
+
+  const url = "programa-carnaval-2025.pdf";
+  const container = document.getElementById("pdf-container") as HTMLDivElement;
+
+  // Cargar el documento
+  getDocument(url).promise.then((pdf) => {
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+      pdf.getPage(pageNumber).then((page) => {
+        const scale = 1.5;
+        const viewport = page.getViewport({ scale });
+
+        // Crear un nuevo canvas para cada página
+        const canvas = document.createElement("canvas");
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        container.appendChild(canvas);
+
+        const ctx = canvas.getContext("2d");
+
+        const renderContext = {
+          canvasContext: ctx!,
+          viewport: viewport,
+        };
+
+        page.render(renderContext);
+      });
+    }
+  });
+</script>

@@ -2,19 +2,18 @@
 import Camera from "@/assets/Camera.astro";
 import Layout from "@/layouts/Layout.astro";
 import Book from "@/assets/Book.astro";
-import Poster from "@/assets/Poster.astro";
 ---
 
 <Layout>
   <main
-    class="flex flex-1 flex-col items-center bg-[url('/bg.svg')] bg-cover bg-no-repeat p-6 text-black"
+    class="flex flex-1 flex-col items-center justify-center bg-[url('/bg.svg')] bg-cover bg-no-repeat p-6 text-black"
   >
-    <img src="/logo.svg" alt="Carnaval Sitges 2025" class="w-20 mt-12" />
+    <img src="/logo.svg" alt="Carnaval Sitges 2025" class="w-20" />
 
-    <nav class="mt-12 grid grid-cols-2 gap-4">
+    <nav class="mt-12 grid grid-cols-1 gap-4">
       <a
         href="/camara"
-        class="flex flex-col items-center rounded-3xl border border-white/20 bg-white/10 p-10 gap-2"
+        class="flex flex-col items-center gap-2 rounded-3xl border border-white/20 bg-white/10 p-10"
       >
         <Camera class="w-10" />
         <p>Camara</p>
@@ -22,18 +21,10 @@ import Poster from "@/assets/Poster.astro";
 
       <a
         href="/programa"
-        class="flex flex-col items-center rounded-3xl border border-white/20 bg-white/10 p-10 gap-2"
+        class="flex flex-col items-center gap-2 rounded-3xl border border-white/20 bg-white/10 p-10"
       >
         <Book class="w-10" />
         <p>Programa</p>
-      </a>
-
-      <a
-        href="/imatges"
-        class="flex flex-col items-center rounded-3xl border border-white/20 bg-white/10 p-10 gap-2"
-      >
-        <Poster class="w-10" />
-        <p>Imatges</p>
       </a>
     </nav>
   </main>
