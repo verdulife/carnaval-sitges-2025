@@ -10,21 +10,10 @@ import Back from "@/assets/Back.astro";
 
   <main class="relative flex flex-1 flex-col items-center justify-center">
     <div
-      id="progress-container"
-      class="fixed top-1/2 left-1/2 h-2 w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-neutral-700"
-      style="display: none;"
+      id="viewerContainer"
+      class="absolute inset-0 h-svh w-screen overflow-auto"
     >
-      <div
-        id="progress-bar"
-        class="h-full w-0 rounded-full bg-[url('./bg.svg')]"
-      >
-      </div>
-    </div>
-
-    <div
-      id="pdf-container"
-      class="flex h-svh w-full flex-col gap-2 overflow-x-clip overflow-y-auto"
-    >
+      <div id="pdfViewer" class="pdfViewer h-auto w-full"></div>
     </div>
 
     <div
@@ -70,62 +59,59 @@ import Back from "@/assets/Back.astro";
 </Layout>
 
 <script>
+  import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
   import {
-    type PDFDocumentLoadingTask,
-    type OnProgressParameters,
-    getDocument,
-    GlobalWorkerOptions,
-  } from "pdfjs-dist";
+    PDFViewer,
+    EventBus,
+    PDFLinkService,
+  } from "pdfjs-dist/web/pdf_viewer.mjs";
+  import "pdfjs-dist/web/pdf_viewer.css";
 
+  const MAX_CANVAS_PIXELS = 0; // CSS-only zooming.
+  const TEXT_LAYER_MODE = 0; // DISABLE
+  const MAX_IMAGE_SIZE = 1024 * 1024;
+  const CMAP_URL = "cmaps/";
+  const CMAP_PACKED = true;
+
+  // Configuración del worker de PDF.js
   GlobalWorkerOptions.workerSrc = "pdf.worker.min.mjs";
 
-  const url = "programa-carnaval-2025.pdf";
-  const container = document.getElementById("pdf-container") as HTMLDivElement;
-  const progressContainer = document.getElementById(
-    "progress-container"
+  // Elementos del DOM
+  const container = document.getElementById(
+    "viewerContainer"
   ) as HTMLDivElement;
-  const progressBar = document.getElementById(
-    "progress-bar"
-  ) as HTMLProgressElement;
 
-  progressContainer.style.display = "block";
+  // Inicialización del visor de PDF
+  const eventBus = new EventBus();
+  const linkService = new PDFLinkService({ eventBus });
 
-  const loadingTask: PDFDocumentLoadingTask = getDocument({
-    url,
-    cMapUrl: "cmaps/",
-    cMapPacked: true,
-    disableAutoFetch: false,
+  const pdfViewer = new PDFViewer({
+    container,
+    eventBus,
+    linkService,
+    maxCanvasPixels: MAX_CANVAS_PIXELS,
+    textLayerMode: TEXT_LAYER_MODE,
   });
 
-  loadingTask.onProgress = (progressData: OnProgressParameters) => {
-    const percent = (progressData.loaded / progressData.total) * 100;
-    progressBar.style.width = `${percent}%`;
-  };
+  // Cargar el PDF con barra de progreso
+  const url = "programa-carnaval-2025.pdf";
+  const loadingTask = getDocument({
+    url,
+    maxImageSize: MAX_IMAGE_SIZE,
+    cMapUrl: CMAP_URL,
+    cMapPacked: CMAP_PACKED,
+  });
 
   loadingTask.promise.then((pdf) => {
-    progressContainer.style.display = "none";
+    pdfViewer.setDocument(pdf);
+    linkService.setDocument(pdf, null);
 
-    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
-      pdf.getPage(pageNumber).then((page) => {
-        const scale = 1.5;
-        const viewport = page.getViewport({ scale });
-
-        // Crear un nuevo canvas para cada página
-        const canvas = document.createElement("canvas");
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        container.appendChild(canvas);
-
-        const ctx = canvas.getContext("2d");
-
-        const renderContext = {
-          canvasContext: ctx!,
-          viewport: viewport,
-        };
-
-        page.render(renderContext);
-      });
-    }
+    // Ajustar el zoom y la disposición de las páginas
+    pdf.getPage(2).then((page) => {
+      const viewport = page.getViewport({ scale: 1.4 });
+      const scale = container.clientWidth / viewport.width;
+      pdfViewer.currentScaleValue = scale.toString();
+    });
   });
 </script>
 
