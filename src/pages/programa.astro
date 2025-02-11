@@ -10,10 +10,21 @@ import Back from "@/assets/Back.astro";
 
   <main class="relative flex flex-1 flex-col items-center justify-center">
     <div
-      id="viewerContainer"
-      class="absolute inset-0 h-svh w-screen touch-pan-x touch-pan-y overflow-auto"
+      id="progress-container"
+      class="fixed top-1/2 left-1/2 h-2 w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-neutral-700"
+      style="display: none;"
     >
-      <div id="pdfViewer" class="pdfViewer h-auto w-full"></div>
+      <div
+        id="progress-bar"
+        class="h-full w-0 rounded-full bg-(image:--mesh) bg-cover bg-no-repeat"
+      >
+      </div>
+    </div>
+
+    <div
+      id="pdf-container"
+      class="absolute inset-0 flex h-svh w-full flex-col overflow-auto"
+    >
     </div>
 
     <div
@@ -59,98 +70,61 @@ import Back from "@/assets/Back.astro";
 </Layout>
 
 <script>
-  import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
   import {
-    PDFViewer,
-    EventBus,
-    PDFLinkService,
-  } from "pdfjs-dist/web/pdf_viewer.mjs";
-  import "pdfjs-dist/web/pdf_viewer.css";
+    type PDFDocumentLoadingTask,
+    type OnProgressParameters,
+    getDocument,
+    GlobalWorkerOptions,
+  } from "pdfjs-dist";
 
-  const MAX_CANVAS_PIXELS = 0; // CSS-only zooming.
-  const TEXT_LAYER_MODE = 0; // DISABLE
-  const MAX_IMAGE_SIZE = 1024 * 1024;
-  const CMAP_URL = "cmaps/";
-  const CMAP_PACKED = true;
-
-  // Configuración del worker de PDF.js
   GlobalWorkerOptions.workerSrc = "pdf.worker.min.mjs";
 
-  // Elementos del DOM
-  const container = document.getElementById(
-    "viewerContainer"
-  ) as HTMLDivElement;
-
-  // Inicialización del visor de PDF
-  const eventBus = new EventBus();
-  const linkService = new PDFLinkService({ eventBus });
-
-  const pdfViewer = new PDFViewer({
-    container,
-    eventBus,
-    linkService,
-    maxCanvasPixels: MAX_CANVAS_PIXELS,
-    textLayerMode: TEXT_LAYER_MODE,
-  });
-
-  // Cargar el PDF con barra de progreso
   const url = "programa-carnaval-2025.pdf";
-  const loadingTask = getDocument({
+  const container = document.getElementById("pdf-container") as HTMLDivElement;
+  const progressContainer = document.getElementById(
+    "progress-container"
+  ) as HTMLDivElement;
+  const progressBar = document.getElementById(
+    "progress-bar"
+  ) as HTMLProgressElement;
+
+  progressContainer.style.display = "block";
+
+  const loadingTask: PDFDocumentLoadingTask = getDocument({
     url,
-    maxImageSize: MAX_IMAGE_SIZE,
-    cMapUrl: CMAP_URL,
-    cMapPacked: CMAP_PACKED,
+    cMapUrl: "cmaps/",
+    cMapPacked: true,
+    disableAutoFetch: false,
   });
+
+  loadingTask.onProgress = (progressData: OnProgressParameters) => {
+    const percent = (progressData.loaded / progressData.total) * 100;
+    progressBar.style.width = `${percent}%`;
+  };
 
   loadingTask.promise.then((pdf) => {
-    pdfViewer.setDocument(pdf);
-    linkService.setDocument(pdf, null);
+    progressContainer.style.display = "none";
 
-    // Ajustar el zoom y la disposición de las páginas
-    pdf.getPage(2).then((page) => {
-      const viewport = page.getViewport({ scale: 1.4 });
-      const scale = container.clientWidth / viewport.width;
-      pdfViewer.currentScaleValue = scale.toString();
-    });
-  });
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+      pdf.getPage(pageNumber).then((page) => {
+        const viewport = page.getViewport({ scale: 1 });
 
-  let initialDistance: number | null = null;
+        // Crear un nuevo canvas para cada página
+        const canvas = document.createElement("canvas");
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        container.appendChild(canvas);
 
-  // Función para calcular la distancia entre dos puntos táctiles
-  function getTouchDistance(touch1: Touch, touch2: Touch): number {
-    const dx = touch1.clientX - touch2.clientX;
-    const dy = touch1.clientY - touch2.clientY;
-    return Math.sqrt(dx * dx + dy * dy);
-  }
+        const ctx = canvas.getContext("2d");
 
-  // Evento para detectar el inicio del gesto táctil
-  container.addEventListener("touchstart", (event: TouchEvent) => {
-    if (event.touches.length === 2) {
-      // Si hay dos dedos, calcular la distancia inicial
-      initialDistance = getTouchDistance(event.touches[0], event.touches[1]);
+        const renderContext = {
+          canvasContext: ctx!,
+          viewport: viewport,
+        };
+
+        page.render(renderContext);
+      });
     }
-  });
-
-  // Evento para detectar el movimiento táctil
-  container.addEventListener("touchmove", (event: TouchEvent) => {
-    if (event.touches.length === 2 && initialDistance !== null) {
-      // Calcular la nueva distancia entre los dedos
-      const newDistance = getTouchDistance(event.touches[0], event.touches[1]);
-
-      // Calcular el factor de escala
-      const scale = newDistance / initialDistance;
-
-      // Aplicar el zoom al visor de PDF
-      pdfViewer.currentScale *= scale;
-
-      // Actualizar la distancia inicial
-      initialDistance = newDistance;
-    }
-  });
-
-  // Evento para detectar el fin del gesto táctil
-  container.addEventListener("touchend", () => {
-    initialDistance = null; // Reiniciar la distancia inicial
   });
 </script>
 
