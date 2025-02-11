@@ -113,6 +113,45 @@ import Back from "@/assets/Back.astro";
       pdfViewer.currentScaleValue = scale.toString();
     });
   });
+
+  let initialDistance: number | null = null;
+
+  // Función para calcular la distancia entre dos puntos táctiles
+  function getTouchDistance(touch1: Touch, touch2: Touch): number {
+    const dx = touch1.clientX - touch2.clientX;
+    const dy = touch1.clientY - touch2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  // Evento para detectar el inicio del gesto táctil
+  container.addEventListener("touchstart", (event: TouchEvent) => {
+    if (event.touches.length === 2) {
+      // Si hay dos dedos, calcular la distancia inicial
+      initialDistance = getTouchDistance(event.touches[0], event.touches[1]);
+    }
+  });
+
+  // Evento para detectar el movimiento táctil
+  container.addEventListener("touchmove", (event: TouchEvent) => {
+    if (event.touches.length === 2 && initialDistance !== null) {
+      // Calcular la nueva distancia entre los dedos
+      const newDistance = getTouchDistance(event.touches[0], event.touches[1]);
+
+      // Calcular el factor de escala
+      const scale = newDistance / initialDistance;
+
+      // Aplicar el zoom al visor de PDF
+      pdfViewer.currentScale *= scale;
+
+      // Actualizar la distancia inicial
+      initialDistance = newDistance;
+    }
+  });
+
+  // Evento para detectar el fin del gesto táctil
+  container.addEventListener("touchend", () => {
+    initialDistance = null; // Reiniciar la distancia inicial
+  });
 </script>
 
 <script>
