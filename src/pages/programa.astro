@@ -11,7 +11,7 @@ import Back from "@/assets/Back.astro";
   <main class="relative flex flex-1 flex-col items-center justify-center">
     <div
       id="viewerContainer"
-      class="absolute inset-0 h-svh w-screen overflow-auto touch-pan-x touch-pan-y"
+      class="absolute inset-0 h-svh w-screen touch-pan-x touch-pan-y overflow-auto"
     >
       <div id="pdfViewer" class="pdfViewer h-auto w-full"></div>
     </div>
@@ -29,7 +29,7 @@ import Back from "@/assets/Back.astro";
         id="filter-normal"
         class:list={[
           "min-w-20 rounded-full bg-cover bg-no-repeat px-4 py-2 text-neutral-400 transition-transform active:scale-105",
-          true && "bg-mesh text-neutral-950",
+          true && "bg-(image:--mesh) text-neutral-950",
         ]}
       >
         Normal
@@ -39,7 +39,7 @@ import Back from "@/assets/Back.astro";
         id="filter-night"
         class:list={[
           "min-w-20 rounded-full bg-cover bg-no-repeat px-4 py-2 text-neutral-400 transition-transform active:scale-105",
-          false && "bg-mesh text-neutral-950",
+          false && "bg-(image:--mesh) text-neutral-950",
         ]}
       >
         Nit
@@ -49,7 +49,7 @@ import Back from "@/assets/Back.astro";
         id="filter-day"
         class:list={[
           "min-w-20 rounded-full bg-cover bg-no-repeat px-4 py-2 text-neutral-400 transition-transform active:scale-105",
-          false && "bg-mesh text-neutral-950",
+          false && "bg-(image:--mesh) text-neutral-950",
         ]}
       >
         Dia
@@ -128,33 +128,33 @@ import Back from "@/assets/Back.astro";
   filter_night.addEventListener("click", () => {
     filter.style.setProperty("--filter", `var(--filter-red`);
 
-    filter_night.classList.add("bg-mesh");
+    filter_night.classList.add("bg-(image:--mesh)");
     filter_night.classList.add("text-neutral-950");
-    filter_day.classList.remove("bg-mesh");
+    filter_day.classList.remove("bg-(image:--mesh)");
     filter_day.classList.remove("text-neutral-950");
-    filter_normal.classList.remove("bg-mesh");
+    filter_normal.classList.remove("bg-(image:--mesh)");
     filter_normal.classList.remove("text-neutral-950");
   });
 
   filter_day.addEventListener("click", () => {
     filter.style.setProperty("--filter", `var(--filter-blue`);
 
-    filter_night.classList.remove("bg-mesh");
+    filter_night.classList.remove("bg-(image:--mesh)");
     filter_night.classList.remove("text-neutral-950");
-    filter_day.classList.add("bg-mesh");
+    filter_day.classList.add("bg-(image:--mesh)");
     filter_day.classList.add("text-neutral-950");
-    filter_normal.classList.remove("bg-mesh");
+    filter_normal.classList.remove("bg-(image:--mesh)");
     filter_normal.classList.remove("text-neutral-950");
   });
 
   filter_normal.addEventListener("click", () => {
     filter.style.setProperty("--filter", `transparent`);
 
-    filter_night.classList.remove("bg-mesh");
+    filter_night.classList.remove("bg-(image:--mesh)");
     filter_night.classList.remove("text-neutral-950");
-    filter_day.classList.remove("bg-mesh");
+    filter_day.classList.remove("bg-(image:--mesh)");
     filter_day.classList.remove("text-neutral-950");
-    filter_normal.classList.add("bg-mesh");
+    filter_normal.classList.add("bg-(image:--mesh)");
     filter_normal.classList.add("text-neutral-950");
   });
 </script>
