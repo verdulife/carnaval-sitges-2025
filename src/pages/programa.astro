@@ -4,29 +4,103 @@ import Back from "@/assets/Back.astro";
 ---
 
 <Layout>
-  <main class="flex flex-1 flex-col items-center justify-center">
-    <a href="/" class="fixed top-4 left-4 z-50">
-      <Back class="w-6" />
-    </a>
+  <a href="/" class="fixed top-4 left-4 z-50">
+    <Back class="w-6" />
+  </a>
+
+  <main class="relative flex flex-1 flex-col items-center justify-center">
+    <div
+      id="progress-container"
+      class="fixed top-1/2 left-1/2 h-2 w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-neutral-700"
+      style="display: none;"
+    >
+      <div id="progress-bar" class="h-full w-0 rounded-full bg-red-300"></div>
+    </div>
 
     <div
       id="pdf-container"
       class="flex h-svh w-full flex-col gap-2 overflow-x-clip overflow-y-auto"
     >
     </div>
+
+    <div
+      style="--filter: transparent;"
+      class="pointer-events-none absolute inset-0 bg-[var(--filter)] mix-blend-multiply filter"
+    >
+    </div>
+
+    <div
+      class="p2 fixed bottom-8 z-10 flex rounded-full border border-neutral-800 bg-neutral-900 p-2"
+    >
+      <button
+        id="filter-normal"
+        class:list={[
+          "min-w-20 rounded-full px-4 py-2 text-neutral-400 transition-transform active:scale-105",
+          true && "bg-red-300 text-neutral-950",
+        ]}
+      >
+        Normal
+      </button>
+
+      <button
+        id="filter-night"
+        class:list={[
+          "min-w-20 rounded-full px-4 py-2 text-neutral-400 transition-transform active:scale-105",
+          false && "bg-red-300 text-neutral-950",
+        ]}
+      >
+        Nit
+      </button>
+
+      <button
+        id="filter-day"
+        class:list={[
+          "min-w-20 rounded-full px-4 py-2 text-neutral-400 transition-transform active:scale-105",
+          false && "bg-red-300 text-neutral-950",
+        ]}
+      >
+        Dia
+      </button>
+    </div>
   </main>
 </Layout>
 
 <script>
-  import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
+  import {
+    type PDFDocumentLoadingTask,
+    type OnProgressParameters,
+    getDocument,
+    GlobalWorkerOptions,
+  } from "pdfjs-dist";
 
   GlobalWorkerOptions.workerSrc = "pdf.worker.min.mjs";
 
   const url = "programa-carnaval-2025.pdf";
   const container = document.getElementById("pdf-container") as HTMLDivElement;
+  const progressContainer = document.getElementById(
+    "progress-container"
+  ) as HTMLDivElement;
+  const progressBar = document.getElementById(
+    "progress-bar"
+  ) as HTMLProgressElement;
 
-  // Cargar el documento
-  getDocument(url).promise.then((pdf) => {
+  progressContainer.style.display = "block";
+
+  const loadingTask: PDFDocumentLoadingTask = getDocument({
+    url,
+    cMapUrl: "cmaps/",
+    cMapPacked: true,
+    disableAutoFetch: false,
+  });
+
+  loadingTask.onProgress = (progressData: OnProgressParameters) => {
+    const percent = (progressData.loaded / progressData.total) * 100;
+    progressBar.style.width = `${percent}%`;
+  };
+
+  loadingTask.promise.then((pdf) => {
+    progressContainer.style.display = "none";
+
     for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
       pdf.getPage(pageNumber).then((page) => {
         const scale = 1.5;
@@ -48,5 +122,49 @@ import Back from "@/assets/Back.astro";
         page.render(renderContext);
       });
     }
+  });
+</script>
+
+<script>
+  const filter = document.querySelector(".filter") as HTMLElement;
+  const filter_night = document.querySelector(
+    "#filter-night"
+  ) as HTMLButtonElement;
+  const filter_day = document.querySelector("#filter-day") as HTMLButtonElement;
+  const filter_normal = document.querySelector(
+    "#filter-normal"
+  ) as HTMLButtonElement;
+
+  filter_night.addEventListener("click", () => {
+    filter.style.setProperty("--filter", `var(--filter-red`);
+
+    filter_night.classList.add("bg-red-300");
+    filter_night.classList.add("text-neutral-950");
+    filter_day.classList.remove("bg-red-300");
+    filter_day.classList.remove("text-neutral-950");
+    filter_normal.classList.remove("bg-red-300");
+    filter_normal.classList.remove("text-neutral-950");
+  });
+
+  filter_day.addEventListener("click", () => {
+    filter.style.setProperty("--filter", `var(--filter-blue`);
+
+    filter_night.classList.remove("bg-red-300");
+    filter_night.classList.remove("text-neutral-950");
+    filter_day.classList.add("bg-red-300");
+    filter_day.classList.add("text-neutral-950");
+    filter_normal.classList.remove("bg-red-300");
+    filter_normal.classList.remove("text-neutral-950");
+  });
+
+  filter_normal.addEventListener("click", () => {
+    filter.style.setProperty("--filter", `transparent`);
+
+    filter_night.classList.remove("bg-red-300");
+    filter_night.classList.remove("text-neutral-950");
+    filter_day.classList.remove("bg-red-300");
+    filter_day.classList.remove("text-neutral-950");
+    filter_normal.classList.add("bg-red-300");
+    filter_normal.classList.add("text-neutral-950");
   });
 </script>
