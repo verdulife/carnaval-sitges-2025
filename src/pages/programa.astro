@@ -22,19 +22,23 @@ import { pages } from "@/assets/pdf";
       </div>
     </div>
 
-    <div
-      id="pdf-container"
-      class="absolute inset-0 flex h-svh w-full flex-col overflow-auto gap-1"
-    >
-      {pages.map((page) => (
-        <img
-          src={page.src}
-          alt={page.alt}
-          loading="lazy"
-          decoding="async"
-          class="w-full object-contain"
-        />
-      ))}
+    <div class="wrapper h-svh w-full touch-pan-x touch-pan-y overflow-auto">
+      <div
+        id="pdf-container"
+        class="mx-auto flex size-full touch-pan-x touch-pan-y flex-col gap-1 overflow-x-auto"
+      >
+        {
+          pages.map((page) => (
+            <img
+              src={page.src}
+              alt={page.alt}
+              loading="lazy"
+              decoding="async"
+              class="w-full object-contain"
+            />
+          ))
+        }
+      </div>
     </div>
 
     <div
@@ -78,6 +82,31 @@ import { pages } from "@/assets/pdf";
     </div>
   </main>
 </Layout>
+
+<style>
+  .large {
+    width: 150%;
+  }
+</style>
+
+<script>
+  import interact from "interactjs";
+
+  const container = document.querySelector("#pdf-container") as HTMLElement;
+  let scale = 1;
+
+  interact(container).gesturable({
+    listeners: {
+      move(event) {
+        const currentScale = event.scale * scale;
+        const scaleValue = currentScale * 100;
+        const constrainedValue = Math.max(scaleValue, 100);
+        container.style.width = `${constrainedValue}%`;
+        console.log(currentScale);
+      },
+    },
+  });
+</script>
 
 <script>
   const filter = document.querySelector(".filter") as HTMLElement;
