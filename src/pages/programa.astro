@@ -22,13 +22,13 @@ import { pages } from "@/assets/pdf";
       </div>
     </div>
 
-    <div class="wrapper h-svh w-full touch-pan-x touch-pan-y overflow-auto">
+    <div class="wrapper h-svh w-full touch-pan-x touch-pan-y">
       <div
         id="pdf-container"
-        class="mx-auto flex size-full touch-pan-x touch-pan-y flex-col gap-1 overflow-x-auto"
+        class="mx-auto flex size-full touch-pan-x touch-pan-y flex-col gap-1 overflow-auto"
       >
         {
-          pages.map((page) => (
+          pages.map((page, i) => (
             <img
               src={page.src}
               alt={page.alt}
@@ -83,29 +83,38 @@ import { pages } from "@/assets/pdf";
   </main>
 </Layout>
 
-<style>
-  .large {
-    width: 150%;
-  }
-</style>
-
 <script>
   import interact from "interactjs";
 
   const container = document.querySelector("#pdf-container") as HTMLElement;
   let scale = 1;
 
-  interact(container).gesturable({
-    listeners: {
-      move(event) {
-        const currentScale = event.scale * scale;
-        const scaleValue = currentScale * 100;
-        const constrainedValue = Math.max(scaleValue, 100);
-        container.style.width = `${constrainedValue}%`;
-        console.log(currentScale);
+  function dragMoveListener(ev: any) {
+    if (scale === 1) return;
+    const dataX = container.getAttribute("data-x") || "0";
+    const dataY = container.getAttribute("data-y") || "0";
+    const x = parseFloat(dataX) + ev.dx;
+    const y = parseFloat(dataY) + ev.dy;
+
+    container.style.transition = "none";
+    container.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+    container.setAttribute("data-x", x);
+    container.setAttribute("data-y", y);
+  }
+
+  interact(container)
+    .on("doubletap", function (ev) {
+      ev.preventDefault();
+      scale = scale === 1 ? 2 : 1;
+      container.style.transition = "transform 300ms ease-in-out";
+      container.style.transform = `translate(${0}px, ${0}px) scale(${scale})`;
+    })
+    .draggable({
+      autoScroll: true,
+      listeners: {
+        move: dragMoveListener,
       },
-    },
-  });
+    });
 </script>
 
 <script>
