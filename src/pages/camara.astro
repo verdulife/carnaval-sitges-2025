@@ -18,7 +18,7 @@ import Back from "@/assets/Back.astro";
     </video>
 
     <div
-      style="--filter: var(--filter-red);"
+      style="--filter: var(--filter-blue);"
       class="absolute inset-0 bg-[var(--filter)] mix-blend-multiply filter"
     >
     </div>
@@ -27,23 +27,23 @@ import Back from "@/assets/Back.astro";
       class="fixed bottom-8 z-10 flex rounded-full border border-neutral-800 bg-neutral-900 p-2"
     >
       <button
-        id="filter-night"
+        id="filter-day"
         class:list={[
           "min-w-20 rounded-full bg-cover bg-no-repeat px-4 py-2 text-neutral-400 transition-transform active:scale-105",
           true && "bg-(image:--mesh) text-neutral-950",
         ]}
       >
-        Filtre nit
+        Filtre dia
       </button>
 
       <button
-        id="filter-day"
+        id="filter-night"
         class:list={[
           "min-w-20 rounded-full bg-cover bg-no-repeat px-4 py-2 text-neutral-400 transition-transform active:scale-105",
           false && "bg-(image:--mesh) text-neutral-950",
         ]}
       >
-        Filtre dia
+        Filtre nit
       </button>
     </div>
   </main>

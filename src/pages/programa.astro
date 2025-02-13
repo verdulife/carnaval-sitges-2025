@@ -61,16 +61,6 @@ import { pages } from "@/assets/pdf";
       </button>
 
       <button
-        id="filter-night"
-        class:list={[
-          "min-w-20 rounded-full bg-cover bg-no-repeat px-4 py-2 text-neutral-400 transition-transform active:scale-105",
-          false && "bg-(image:--mesh) text-neutral-950",
-        ]}
-      >
-        Nit
-      </button>
-
-      <button
         id="filter-day"
         class:list={[
           "min-w-20 rounded-full bg-cover bg-no-repeat px-4 py-2 text-neutral-400 transition-transform active:scale-105",
@@ -78,6 +68,16 @@ import { pages } from "@/assets/pdf";
         ]}
       >
         Dia
+      </button>
+
+      <button
+        id="filter-night"
+        class:list={[
+          "min-w-20 rounded-full bg-cover bg-no-repeat px-4 py-2 text-neutral-400 transition-transform active:scale-105",
+          false && "bg-(image:--mesh) text-neutral-950",
+        ]}
+      >
+        Nit
       </button>
     </div>
   </main>
