@@ -124,8 +124,9 @@ import { pages } from "@/assets/pdf";
   const allImages = Promise.all(images);
 
   allImages.then((images) => {
+    progressContainer.style.display = "none";
+
     images.forEach((img: any) => {
-      progressContainer.style.display = "none";
       container.appendChild(img);
     });
   });
