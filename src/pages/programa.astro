@@ -22,24 +22,24 @@ import { pages } from "@/assets/pdf";
       </div>
     </div>
 
-    <div class="wrapper h-svh w-full touch-pan-x touch-pan-y">
+    <pinch-zoom class="w-full cursor-grab">
       <div
         id="pdf-container"
-        class="mx-auto flex size-full touch-pan-x touch-pan-y flex-col gap-1 overflow-auto"
+        class="flex size-full touch-pan-x touch-pan-y flex-col gap-1 overflow-auto"
       >
         {
-          pages.map((page, i) => (
+          pages.map((page) => (
             <img
               src={page.src}
               alt={page.alt}
               loading="lazy"
               decoding="async"
-              class="w-full object-contain"
+              class="w-full object-contain lg:h-svh lg:w-auto"
             />
           ))
         }
       </div>
-    </div>
+    </pinch-zoom>
 
     <div
       style="--filter: transparent;"
@@ -82,40 +82,6 @@ import { pages } from "@/assets/pdf";
     </div>
   </main>
 </Layout>
-
-<script>
-  import interact from "interactjs";
-
-  const container = document.querySelector("#pdf-container") as HTMLElement;
-  let scale = 1;
-
-  function dragMoveListener(ev: any) {
-    if (scale === 1) return;
-    const dataX = container.getAttribute("data-x") || "0";
-    const dataY = container.getAttribute("data-y") || "0";
-    const x = parseFloat(dataX) + ev.dx;
-    const y = parseFloat(dataY) + ev.dy;
-
-    container.style.transition = "none";
-    container.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
-    container.setAttribute("data-x", x);
-    container.setAttribute("data-y", y);
-  }
-
-  interact(container)
-    .on("doubletap", function (ev) {
-      ev.preventDefault();
-      scale = scale === 1 ? 2 : 1;
-      container.style.transition = "transform 300ms ease-in-out";
-      container.style.transform = `translate(${0}px, ${0}px) scale(${scale})`;
-    })
-    .draggable({
-      autoScroll: true,
-      listeners: {
-        move: dragMoveListener,
-      },
-    });
-</script>
 
 <script>
   const filter = document.querySelector(".filter") as HTMLElement;
