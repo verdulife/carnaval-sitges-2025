@@ -102,21 +102,21 @@ import Back from "@/assets/Back.astro";
   progressContainer.style.display = "block";
 
   // create img elements from pages and promise them
-  const images = pages.map((page, i) => {
+  const images = pages.map(async (page, i) => {
     const imageNum = i + 1;
     const percentage = (imageNum / pages.length) * 100;
 
-    return new Promise((resolve) => {
+    const image = await new Promise((resolve) => {
       const img = new Image();
       img.src = page.src;
       img.alt = page.alt;
       img.width = container.clientWidth * 2;
       img.classList.add("page");
       img.onload = () => resolve(img);
-    }).then((img) => {
-      progressBar.style.width = `${percentage}%`;
-      return img;
     });
+
+    progressBar.style.width = `${percentage}%`;
+    return image;
   });
 
   const allImages = Promise.all(images);
